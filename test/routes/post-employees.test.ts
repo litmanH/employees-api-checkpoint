@@ -12,26 +12,22 @@ describe("POST /api/employees/:id", () => {
     await destroyTestDb(app);
   });
 
-  it("should return 404 with get employee id after deleting with the same id", async () => {
+  const employeeData = {
+    "name": "Mihkel Huang",
+    "title": "Intern",
+    "tribe_id": 1
+};
+
+  it("should return success message with the id of the employee created", async () => {
     const res = await app.inject({
       url: "/api/employees",
       method: "POST",
+      payload: employeeData,
     });
 
     const response = res.json();
 
-    expect
-    expect(response).toEqual({ success: true });
-
-    const resAfterDelete = await app.inject({
-        url: "/api/employees/1",
-        method: "GET",
-      });
-
-    const responseAfterDelete = resAfterDelete.json();
-    const statusCodeAfterDelete = resAfterDelete.statusCode;
-    
-    expect(statusCodeAfterDelete).toEqual(404);
-    expect(responseAfterDelete).toEqual({error: "No employee with id 1 is found"});
+    expect(response.success).toBe(true);
+    expect(response.id).toBeDefined();
   });
 });
