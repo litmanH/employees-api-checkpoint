@@ -94,8 +94,11 @@ export async function createEmployee(
   fastify: FastifyInstance,
   employee: EmployeeBodyType
 ) {
-  await fastify.db.from(TABLE_NAME).insert(employee);
+  const [id] = await fastify.db.from(TABLE_NAME).insert(employee).returning('id');
   await fastify.cache.del(EMPLOYEES_REPORT_CACHE_KEY);
+
+  return id;
+
 }
 
 export async function deleteEmployee(fastify: FastifyInstance, id: number) {
